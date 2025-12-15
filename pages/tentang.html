@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Pengguna - SkyWeather</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/css/tentang.css">
+
+  <style>
+    /* CSS Tambahan khusus halaman ini */
+    .info-group {
+      margin-bottom: 20px;
+    }
+    
+    .info-label {
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 5px;
+      display: block;
+      font-weight: 600;
+    }
+
+    .info-value {
+      background: rgba(255, 255, 255, 0.5);
+      padding: 12px 15px;
+      border-radius: 10px;
+      color: #333;
+      font-size: 1rem;
+      border: 1px solid rgba(255,255,255,0.6);
+      text-transform: capitalize; /* Membuat huruf awal kota jadi besar */
+    }
+
+    /* Ikon User Pengganti Foto */
+    .user-icon {
+      font-size: 5rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .btn-logout {
+      margin-top: 30px;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #ff6b6b, #ee5253);
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 5px 15px rgba(238, 82, 83, 0.3);
+    }
+
+    .btn-logout:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(238, 82, 83, 0.4);
+      background: linear-gradient(135deg, #ff7675, #ff6b6b);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <header>
+    <h1>Profil Pengguna</h1>
+    <nav>
+      <a href="/index.html">Beranda</a>
+      <a href="/berita.html">Berita</a>
+      <a href="/bantuan.html">Bantuan</a>
+      <a href="/tentang.html" class="active">Profil</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="profile-card">
+      
+      <div class="left-section">
+        <span class="user-icon">👤</span>
+        <h2 id="displayNama">Memuat...</h2>
+        <p>Member SkyWeather</p>
+      </div>
+
+      <div class="right-section">
+        
+        <h3>⚙️ Detail Akun</h3>
+        
+        <div class="info-group">
+          <label class="info-label">Nama Lengkap</label>
+          <div class="info-value" id="detailNama">...</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">Alamat Email</label>
+          <div class="info-value" id="detailEmail">...</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">Kota Asal</label>
+          <div class="info-value" id="detailKota">...</div>
+        </div>
+
+        <div class="info-group">
+          <label class="info-label">Status Akun</label>
+          <div class="info-value">✅ Terverifikasi</div>
+        </div>
+
+        <button onclick="logout()" class="btn-logout">
+          🚪 Keluar / Logout
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 SkyWeather App</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. AMBIL DATA DARI LOCALSTORAGE
+      const userStr = localStorage.getItem('user');
+
+      if (userStr) {
+        const user = JSON.parse(userStr);
+
+        // 2. TAMPILKAN KE LAYAR (Termasuk Kota)
+        document.getElementById("displayNama").innerText = user.nama;
+        document.getElementById("detailNama").innerText = user.nama;
+        document.getElementById("detailEmail").innerText = user.email;
+        
+        // Menampilkan Kota (Jika kosong, tampilkan strip -)
+        document.getElementById("detailKota").innerText = user.kota || "-";
+        
+      } else {
+        // Jika belum login, lempar ke halaman login
+        alert("Anda belum login! Silakan login terlebih dahulu.");
+        window.location.href = '/login.html';
+      }
+    });
+
+    // 3. FUNGSI LOGOUT
+    function logout() {
+      const confirmLogout = confirm("Apakah Anda yakin ingin keluar dari aplikasi?");
+      if (confirmLogout) {
+        localStorage.removeItem('user');
+        alert("Anda telah berhasil logout!");
+        window.location.href = "/login.html"; 
+      }
+    }
+  </script>
+
+</body>
+</html>

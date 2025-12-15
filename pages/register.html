@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar Akun - SkyWeather</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+
+  <div class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>🌤️ Daftar Akun</h1>
+        <p>Bergabung untuk dapat notifikasi cuaca!</p>
+      </div>
+
+      <form id="registerForm">
+        <div class="input-group">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" >
+        </div>
+
+        <div class="input-group">
+          <label for="email">Alamat Email</label>
+          <input type="email" id="email" placeholder="masukan email anda" required>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Buat password aman" required>
+        </div>
+
+        <div class="input-group">
+          <label for="kota">Kota Tempat Tinggal</label>
+          <input type="text" id="kota" >
+          <small>Kami akan mengirimkan info cuaca kota ini ke email Anda.</small>
+        </div>
+
+        <button type="submit" id="btnSubmit">Daftar Sekarang</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Sudah punya akun? <a href="login.html">Login di sini</a></p>
+   
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logic Kirim Data ke Backend (Node.js)
+    const registerForm = document.getElementById('registerForm');
+    const btnSubmit = document.getElementById('btnSubmit');
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Ubah tombol jadi loading
+      const originalText = btnSubmit.innerText;
+      btnSubmit.innerText = "⏳ Memproses...";
+      btnSubmit.disabled = true;
+
+      const data = {
+        nama: document.getElementById('nama').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        kota: document.getElementById('kota').value
+      };
+
+      try {
+        // Ganti URL ini sesuai route backend Anda nanti
+        const response = await fetch('/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          alert("✅ Registrasi Berhasil! Cek email Anda untuk info cuaca.");
+          window.location.href = 'login.html';
+        } else {
+          alert("❌ Gagal: " + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("❌ Terjadi kesalahan koneksi ke server.");
+      } finally {
+        // Kembalikan tombol
+        btnSubmit.innerText = originalText;
+        btnSubmit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+/* css/tentang.css */
+
+/* === 1. SETUP DASAR & BACKGROUND === */
+:root {
+  --primary: #5ca0f2;
+  --glass: rgba(255, 255, 255, 0.25);
+  --glass-card: rgba(255, 255, 255, 0.85);
+  --border: rgba(255, 255, 255, 0.4);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  --text-dark: #333;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* === 2. AWAN BERGERAK === */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  z-index: 1;
+  animation: floatCloud linear infinite;
+}
+.cloud::after, .cloud::before {
+  content: ''; position: absolute; background: inherit; border-radius: 50%;
+}
+.c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 25s; }
+.c1::after { width: 50px; height: 50px; top: -30px; left: 20px; }
+.c1::before { width: 40px; height: 40px; top: -20px; left: 60px; }
+
+.c2 { width: 180px; height: 60px; top: 50%; left: -200px; animation-duration: 35s; opacity: 0.4; }
+.c2::after { width: 70px; height: 70px; top: -40px; left: 30px; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+
+@keyframes floatCloud { from { left: -200px; } to { left: 100vw; } }
+
+/* === 3. HEADER === */
+header {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 { font-size: 1.4rem; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+nav a {
+  text-decoration: none; color: #fff; margin-left: 20px; font-weight: 500;
+  padding: 8px 15px; border-radius: 20px; transition: 0.3s;
+}
+nav a:hover, nav a.active { background: rgba(255,255,255,0.3); }
+
+/* === 4. CONTENT CARD (PROFILE STYLE) === */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+  position: relative;
+  z-index: 10;
+}
+
+.profile-card {
+  background: var(--glass-card);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  color: var(--text-dark);
+}
+
+/* Bagian Kiri: Foto & Intro */
+.left-section {
+  text-align: center;
+  border-right: 1px solid rgba(0,0,0,0.1);
+  padding-right: 30px;
+}
+
+.profile-img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid white;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+  transition: transform 0.3s;
+}
+
+.profile-img:hover { transform: scale(1.05); }
+
+.left-section h2 { color: #2c3e50; margin-bottom: 10px; }
+.left-section p { font-size: 0.95rem; color: #666; line-height: 1.6; }
+
+/* Bagian Kanan: Detail Info */
+.right-section h3 {
+  color: #007bff;
+  margin-bottom: 15px;
+  margin-top: 25px;
+  border-bottom: 2px solid rgba(0,123,255,0.2);
+  display: inline-block;
+  padding-bottom: 5px;
+}
+.right-section h3:first-child { margin-top: 0; }
+
+ul { list-style: none; }
+.info-list li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+.info-list strong { min-width: 100px; color: #444; }
+.info-list a { color: #007bff; text-decoration: none; }
+
+/* Skill Badges */
+.skills { display: flex; flex-wrap: wrap; gap: 10px; }
+.skills li {
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+/* Pengalaman Box */
+.experience-item {
+  background: rgba(255,255,255,0.6);
+  padding: 15px;
+  border-radius: 12px;
+  border-left: 4px solid #4facfe;
+}
+
+footer {
+  text-align: center; padding: 15px; color: white; font-size: 0.85rem; z-index: 10;
+}
+
+/* Responsif Mobile */
+@media (max-width: 768px) {
+  .profile-card { grid-template-columns: 1fr; text-align: left; gap: 20px; }
+  .left-section { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.1); padding-right: 0; padding-bottom: 20px; text-align: center; }
+  header { flex-direction: column; gap: 10px; }
+  nav { display: flex; flex-wrap: wrap; justify-content: center; }
+}

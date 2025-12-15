@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - SkyWeather</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body>
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <div class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h1>🔐 Login</h1>
+        <p>Masuk untuk mengakses profil Anda</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="masukan email anda" required>
+        </div>
+
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Masukkan password" required>
+        </div>
+
+        <button type="submit" id="btnLogin">Masuk</button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Logic Login ke Backend
+    const loginForm = document.getElementById('loginForm');
+    const btnLogin = document.getElementById('btnLogin');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const originalText = btnLogin.innerText;
+      btnLogin.innerText = "⏳ Mengecek...";
+      btnLogin.disabled = true;
+
+      const data = {
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      };
+
+      try {
+        // Ganti URL ini sesuai route backend Anda
+        const response = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          // Login Berhasil
+          alert("✅ Login Berhasil! Selamat datang.");
+          
+          // Simpan data user (opsional, bisa pakai localStorage)
+          localStorage.setItem('user', JSON.stringify(result.user));
+          
+          // Redirect ke halaman profil
+          window.location.href = 'index.html';
+        } else {
+          alert("❌ Gagal: " + result.message);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("❌ Server tidak merespon.");
+      } finally {
+        btnLogin.innerText = originalText;
+        btnLogin.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

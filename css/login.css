@@ -1,0 +1,98 @@
+/* css/login.css */
+
+:root {
+  --primary: #5ca0f2;
+  --glass: rgba(255, 255, 255, 0.2);
+  --glass-card: rgba(255, 255, 255, 0.85);
+  --text-dark: #333;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* === Awan Background === */
+.cloud {
+  position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50px; z-index: 1; animation: floatCloud linear infinite;
+}
+.cloud::after, .cloud::before { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+
+.c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 25s; }
+.c1::after { width: 50px; height: 50px; top: -30px; left: 20px; }
+.c1::before { width: 40px; height: 40px; top: -20px; left: 60px; }
+
+.c2 { width: 180px; height: 60px; top: 65%; left: -200px; animation-duration: 35s; opacity: 0.4; }
+.c2::after { width: 70px; height: 70px; top: -40px; left: 30px; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+
+@keyframes floatCloud { from { left: -200px; } to { left: 100vw; } }
+
+/* === Form Card === */
+.container {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+}
+
+.auth-card {
+  background: var(--glass-card);
+  backdrop-filter: blur(20px);
+  width: 100%;
+  max-width: 380px; /* Sedikit lebih kecil dari register */
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.5);
+  text-align: left;
+}
+
+.auth-header { text-align: center; margin-bottom: 30px; }
+.auth-header h1 { font-size: 1.8rem; color: #2c3e50; margin-bottom: 5px; }
+.auth-header p { font-size: 0.9rem; color: #666; }
+
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; font-size: 0.85rem; color: #444; margin-bottom: 5px; font-weight: 600; }
+
+input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.8);
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(92, 160, 242, 0.3); }
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 198, 251, 0.4); }
+button:disabled { background: #ccc; cursor: not-allowed; }
+
+.auth-footer { text-align: center; margin-top: 25px; font-size: 0.9rem; }
+.auth-footer a { color: #007bff; text-decoration: none; font-weight: 600; }
+.auth-footer .back-link { display: block; margin-top: 15px; color: #666; font-size: 0.85rem; }

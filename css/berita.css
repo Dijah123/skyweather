@@ -1,0 +1,135 @@
+/* css/berita.css */
+
+/* === 1. SETUP & BACKGROUND === */
+:root {
+  --primary: #5ca0f2;
+  --glass: rgba(255, 255, 255, 0.25);
+  --glass-card: rgba(255, 255, 255, 0.85);
+  --text-dark: #333;
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  color: var(--text-dark);
+}
+
+/* === 2. ANIMASI AWAN === */
+.cloud {
+  position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50px; z-index: 1; animation: floatCloud linear infinite;
+}
+.cloud::after, .cloud::before { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+
+.c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 25s; }
+.c1::after { width: 50px; height: 50px; top: -30px; left: 20px; }
+.c1::before { width: 40px; height: 40px; top: -20px; left: 60px; }
+
+.c2 { width: 180px; height: 60px; top: 60%; left: -200px; animation-duration: 40s; opacity: 0.4; }
+.c2::after { width: 70px; height: 70px; top: -40px; left: 30px; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+
+@keyframes floatCloud { from { left: -200px; } to { left: 100vw; } }
+
+/* === 3. HEADER === */
+header {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding: 1rem 5%;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+}
+header h1 { font-size: 1.4rem; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+nav ul { list-style: none; display: flex; gap: 20px; }
+nav a {
+  text-decoration: none; color: #fff; font-weight: 500; padding: 8px 15px; border-radius: 20px; transition: 0.3s;
+}
+nav a:hover, nav a.active { background: rgba(255,255,255,0.3); }
+
+/* === 4. GRID BERITA === */
+main {
+  flex: 1; padding: 40px 5%; position: relative; z-index: 10;
+  max-width: 1200px; margin: 0 auto; width: 100%;
+}
+
+.page-title {
+  text-align: center; color: white; margin-bottom: 40px; text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* Kartu Berita */
+article {
+  background: var(--glass-card);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255,255,255,0.5);
+}
+
+article:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.category-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  width: fit-content;
+}
+
+/* Warna Kategori */
+.cat-warning { background: #ffebee; color: #c62828; }
+.cat-info { background: #e3f2fd; color: #1565c0; }
+.cat-agri { background: #e8f5e9; color: #2e7d32; }
+
+article h2 {
+  font-size: 1.2rem; margin-bottom: 10px; color: #2c3e50; line-height: 1.4;
+}
+
+article p {
+  font-size: 0.9rem; color: #555; line-height: 1.6; flex: 1;
+}
+
+.news-footer {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.read-more {
+  color: #007bff; text-decoration: none; font-weight: 600;
+}
+
+/* Footer Halaman */
+footer { text-align: center; padding: 20px; color: white; font-size: 0.85rem; z-index: 10; }
+
+/* Responsif */
+@media (max-width: 768px) {
+  header { flex-direction: column; gap: 15px; }
+  nav ul { flex-wrap: wrap; justify-content: center; }
+}

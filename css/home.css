@@ -1,0 +1,243 @@
+/* css/home.css */
+
+/* === 1. SETUP DASAR === */
+:root {
+  --primary: #5ca0f2;
+  --glass: rgba(255, 255, 255, 0.25);
+  --border: rgba(255, 255, 255, 0.4);
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* === 2. BACKGROUND LANGIT & ANIMASI === */
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%); /* Langit Biru */
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Awan Dekorasi (CSS Pure) */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50px;
+  z-index: 1;
+  animation: floatCloud linear infinite;
+}
+
+.cloud::after, .cloud::before {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+
+/* Bentuk Awan 1 */
+.c1 { width: 120px; height: 40px; top: 15%; left: -150px; animation-duration: 25s; }
+.c1::after { width: 50px; height: 50px; top: -30px; left: 20px; }
+.c1::before { width: 40px; height: 40px; top: -20px; left: 60px; }
+
+/* Bentuk Awan 2 */
+.c2 { width: 180px; height: 60px; top: 40%; left: -200px; animation-duration: 35s; opacity: 0.4; }
+.c2::after { width: 70px; height: 70px; top: -40px; left: 30px; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+
+/* Bentuk Awan 3 */
+.c3 { width: 100px; height: 35px; top: 70%; left: -120px; animation-duration: 20s; animation-delay: 5s; }
+.c3::after { width: 40px; height: 40px; top: -25px; left: 15px; }
+
+@keyframes floatCloud {
+  from { left: -200px; }
+  to { left: 100vw; }
+}
+
+/* === 3. HEADER GLASS === */
+header {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 {
+  font-size: 1.4rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-weight: 700;
+}
+
+nav a {
+  text-decoration: none;
+  color: #fff;
+  margin-left: 20px;
+  font-weight: 500;
+  padding: 8px 15px;
+  border-radius: 20px;
+  transition: 0.3s;
+}
+
+nav a:hover, nav a.active {
+  background: rgba(255,255,255,0.3);
+}
+
+/* === 4. MAIN CONTENT & CARD === */
+main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  z-index: 10; /* Di atas awan */
+}
+
+.weather-card {
+  background: rgba(255, 255, 255, 0.75); /* Kaca Semi Transparan */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.weather-card h2 {
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Form */
+#formCuaca {
+  position: relative;
+  display: flex;
+  margin-bottom: 25px;
+}
+
+input {
+  width: 100%;
+  padding: 15px 20px;
+  border: none;
+  border-radius: 50px;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  outline: none;
+  font-size: 1rem;
+}
+
+button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  bottom: 5px;
+  padding: 0 25px;
+  border: none;
+  border-radius: 50px;
+  background: #4facfe;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #00c6fb;
+  transform: scale(1.05);
+}
+
+/* Hasil Cuaca */
+.weather-result {
+  margin-top: 10px;
+  color: #333;
+}
+
+.weather-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.weather-main img {
+  width: 120px;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.temp {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1;
+}
+
+.desc {
+  font-size: 1.2rem;
+  color: #555;
+  text-transform: capitalize;
+  margin-top: 5px;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.detail-box {
+  background: rgba(255,255,255,0.5);
+  padding: 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-box span {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  color: white;
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 10;
+}
+
+/* Responsif */
+@media (max-width: 600px) {
+  header { flex-direction: column; gap: 10px; }
+  nav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  nav a { margin: 0; }
+}

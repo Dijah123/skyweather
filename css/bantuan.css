@@ -1,0 +1,140 @@
+/* css/bantuan.css */
+
+/* === 1. SETUP & BACKGROUND === */
+:root {
+  --primary: #5ca0f2;
+  --glass: rgba(255, 255, 255, 0.25);
+  --glass-card: rgba(255, 255, 255, 0.9);
+  --glass-inner: rgba(255, 255, 255, 0.6);
+  --text-dark: #333;
+  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #4facfe 0%, #00f2fe 100%);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  color: var(--text-dark);
+}
+
+/* === 2. ANIMASI AWAN === */
+.cloud {
+  position: absolute; background: rgba(255, 255, 255, 0.6); border-radius: 50px; z-index: 1; animation: floatCloud linear infinite;
+}
+.cloud::after, .cloud::before { content: ''; position: absolute; background: inherit; border-radius: 50%; }
+
+.c1 { width: 120px; height: 40px; top: 10%; left: -150px; animation-duration: 25s; }
+.c1::after { width: 50px; height: 50px; top: -30px; left: 20px; }
+.c1::before { width: 40px; height: 40px; top: -20px; left: 60px; }
+
+.c2 { width: 180px; height: 60px; top: 80%; left: -200px; animation-duration: 40s; opacity: 0.4; }
+.c2::after { width: 70px; height: 70px; top: -40px; left: 30px; }
+.c2::before { width: 60px; height: 60px; top: -30px; left: 90px; }
+
+@keyframes floatCloud { from { left: -200px; } to { left: 100vw; } }
+
+/* === 3. HEADER === */
+header {
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  padding: 1rem 5%;
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; z-index: 100;
+}
+header h1 { font-size: 1.4rem; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+nav a {
+  text-decoration: none; color: #fff; margin-left: 20px; font-weight: 500;
+  padding: 8px 15px; border-radius: 20px; transition: 0.3s;
+}
+nav a:hover, nav a.active { background: rgba(255,255,255,0.3); }
+
+/* === 4. MAIN CONTENT (FAQ) === */
+main {
+  flex: 1; padding: 40px 5%; position: relative; z-index: 10;
+  display: flex; justify-content: center;
+}
+
+.help-container {
+  background: var(--glass-card);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: var(--shadow);
+}
+
+.help-container h2 {
+  text-align: center; margin-bottom: 30px; color: #007bff; font-size: 1.8rem;
+}
+
+/* FAQ Items */
+.faq-item {
+  margin-bottom: 30px;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding-bottom: 20px;
+}
+.faq-item:last-child { border-bottom: none; }
+
+.faq-item h3 {
+  font-size: 1.1rem; color: #2c3e50; margin-bottom: 10px; display: flex; align-items: center;
+}
+.faq-item h3::before {
+  content: '❓'; margin-right: 10px; font-size: 1.2rem;
+}
+.faq-item p { line-height: 1.6; color: #555; font-size: 0.95rem; }
+
+/* Grid Architecture Box */
+.api-architecture {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.architecture-box {
+  background: rgba(79, 172, 254, 0.1);
+  border: 1px solid rgba(79, 172, 254, 0.3);
+  padding: 15px;
+  border-radius: 12px;
+}
+
+.architecture-box h5 { margin-bottom: 5px; color: #0056b3; font-size: 1rem; }
+.architecture-box p { font-size: 0.85rem; margin: 0; }
+
+.faq-list ul { margin-left: 20px; margin-top: 10px; }
+.faq-list li { margin-bottom: 5px; color: #555; font-size: 0.9rem; }
+
+/* Diagram */
+.diagram {
+  text-align: center;
+  margin-top: 40px;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.diagram h3 { margin-bottom: 15px; color: #333; }
+.diagram img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #eee;
+}
+
+/* Footer */
+footer { text-align: center; padding: 20px; color: white; font-size: 0.85rem; z-index: 10; }
+
+/* Responsif */
+@media (max-width: 768px) {
+  header { flex-direction: column; gap: 10px; }
+  nav { display: flex; flex-wrap: wrap; justify-content: center; }
+  .api-architecture { grid-template-columns: 1fr; }
+}
