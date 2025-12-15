@@ -18,9 +18,11 @@ app.use("/css", express.static(path.join(__dirname, "css")));
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use("/pages", express.static(path.join(__dirname, "pages")));
 
-// ====== KONEKSI MONGODB ======
-mongoose.connect("mongodb://127.0.0.1:27017/skyweather")
-  .then(() => console.log("✅ Terhubung ke MongoDB"))
+// ====== KONEKSI MONGODB (CLOUD/ONLINE) ======
+// Menggunakan akun MongoDB Atlas yang baru saja Anda buat
+
+mongoose.connect("mongodb+srv://payakumbuhnada_db_user:skyweather123@cluster0.y5bc82f.mongodb.net/skyweather?retryWrites=true&w=majority&appName=Cluster0")
+  .then(() => console.log("✅ Terhubung ke MongoDB Atlas (Cloud)"))
   .catch((err) => console.error("❌ Gagal Konek MongoDB:", err));
 
 // ====== SKEMA USER ======
@@ -37,15 +39,14 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "skyweather075@gmail.com", 
-    pass: "sky29thd03", // App Password
+    pass: "lzev dkck kyrg kewz", // App Password
   },
 });
 
 // ==========================================================
-// 🚨 FITUR BARU: SISTEM PERINGATAN DINI CUACA EKSTREM 🚨
+// 🚨 FITUR: SISTEM PERINGATAN DINI CUACA EKSTREM 🚨
 // ==========================================================
 // Jadwal: Mengecek setiap 1 Jam (menit ke-0)
-// Jika ingin tes cepat (tiap menit), ganti '0 * * * *' menjadi '* * * * *'
 cron.schedule('0 * * * *', async () => {
   console.log("⏳ [SISTEM] Memulai pengecekan cuaca ekstrem massal...");
 
@@ -74,9 +75,8 @@ cron.schedule('0 * * * *', async () => {
         const suhu = Math.round(data.main.temp);
 
         // 3. Deteksi Cuaca Ekstrem
-        // 200-232: Badai Petir (Thunderstorm)
+        // 200-232: Badai Petir
         // 502-504: Hujan Lebat Ekstrem
-        // > 800  : Berawan (Aman)
         
         let bahaya = false;
         let judulBahaya = "";
@@ -178,15 +178,17 @@ app.post("/register", async (req, res) => {
   const { nama, email, password, kota } = req.body;
 
   try {
+    // Cek Email Ganda
     const cekUser = await User.findOne({ email });
     if (cekUser) {
       return res.status(400).json({ message: "Email sudah terdaftar!" });
     }
 
+    // Simpan User Baru
     const newUser = new User({ nama, email, password, kota });
     await newUser.save();
 
-    // Ambil cuaca untuk email selamat datang
+    // Ambil Cuaca Awal untuk Email Welcome
     const apiKey = "63ad873c67027e31098767e7984fdd6b";
     const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(kota)}&appid=${apiKey}&units=metric&lang=id`;
     
@@ -197,6 +199,7 @@ app.post("/register", async (req, res) => {
       infoCuaca = `${Math.round(w.main.temp)}°C, ${w.weather[0].description}`;
     } catch (err) { console.log("Gagal ambil cuaca email"); }
 
+    // Kirim Email Selamat Datang
     const mailOptions = {
       from: "SkyWeather App",
       to: email,
@@ -206,7 +209,7 @@ app.post("/register", async (req, res) => {
         <p>Terima kasih telah mendaftar di SkyWeather.</p>
         <p>Cuaca di kota <strong>${kota}</strong> saat ini:</p>
         <h2 style="color:blue;">${infoCuaca}</h2>
-        <p>Anda juga akan menerima email otomatis jika terjadi cuaca ekstrem di kota Anda.</p>
+        <p>Anda akan menerima notifikasi otomatis jika cuaca memburuk.</p>
         <p>Silakan login untuk melanjutkan.</p>
       `
     };
