@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 const cron = require("node-cron"); // Library untuk jadwal otomatis
 const app = express();
+const http = require("http");
+const { WebSocketServer } = require("ws");
+
+
 
 // ====== KONFIGURASI PORT ======
 const PORT = process.env.PORT || 3000;
@@ -141,15 +145,63 @@ cron.schedule('0 * * * *', async () => {
   }
 });
 
+// =====================================================
+// 🌤️ EMAIL CUACA HARIAN JAM 13:00 (TAMBAHAN)
+// =====================================================
+cron.schedule("0 13 * * *", async () => {
+  console.log("📬 Mengirim email cuaca harian jam 13:00...");
+  const apiKey = "63ad873c67027e31098767e7984fdd6b";
+
+  try {
+    const users = await User.find({});
+    for (const user of users) {
+      if (!user.kota || !user.email) continue;
+
+      try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(user.kota)}&appid=${apiKey}&units=metric&lang=id`;
+        const res = await axios.get(url);
+        const w = res.data;
+
+        const mailOptions = {
+          from: '"SkyWeather Daily" <skyweather075@gmail.com>',
+          to: user.email,
+          subject: `🌤️ Cuaca Hari Ini di ${user.kota}`,
+          html: `
+            <h3>Halo ${user.nama} 👋</h3>
+            <p>Informasi cuaca hari ini di kota Anda:</p>
+            <ul>
+              <li>Kota: ${user.kota}</li>
+              <li>Suhu: ${w.main.temp.toFixed(1)}°C</li>
+              <li>Kondisi: ${w.weather[0].description}</li>
+            </ul>
+            <small>Email otomatis SkyWeather</small>
+          `
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log(`✅ Email harian jam 13:00 terkirim ke ${user.email}`);
+      } catch (err) {
+        console.log(`❌ Gagal kirim ${user.email}: ${err.message}`);
+      }
+    }
+  } catch (err) {
+    console.log("Error cron email harian jam 13:00:", err.message);
+  }
+});
+
 
 // ====== ROUTES HALAMAN (GET) ======
 
 app.get("/", (req, res) => {
-  res.redirect("/login.html");
+  res.redirect("/index.html");
 });
 
 app.get("/index.html", (req, res) => {
   res.sendFile(path.join(__dirname, "pages", "index.html"));
+});
+
+app.get("/home.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "home.html"));
 });
 
 app.get("/tentang.html", (req, res) => {
@@ -253,25 +305,102 @@ app.get("/cuaca/:kota", async (req, res) => {
   }
 });
 
-// ====== API BERITA (Mediastack - Filter Cuaca) ======
+// ====== API BERITA (Mediastack) ======
 app.get("/api/berita", async (req, res) => {
-  const apiKey = "e1892f9b872a546629960cc4f37f3fd3"; 
-  const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&countries=id&keywords=cuaca,hujan,banjir,bmkg,badai,gempa&limit=5&sort=published_desc`;
+  const apiKey = "71d6f959749f464eb7245b216c4273e9";
+  const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&keywords=cuaca&limit=5`;
 
   try {
     const response = await axios.get(url);
-    if (response.data && response.data.data) {
-      res.json(response.data.data);
-    } else {
-      res.status(404).json({ message: "Berita tidak ditemukan" });
+
+    let articles = response.data?.data || [];
+
+    // filter yang punya judul & url
+    articles = articles.filter(a => a.title && a.url);
+
+    // fallback kalau kosong
+    if (articles.length === 0) {
+      articles = [
+        {
+          title: "BMKG: Peringatan Cuaca Ekstrem",
+          description: "Waspada hujan lebat dan angin kencang di beberapa wilayah.",
+          url: "https://www.bmkg.go.id",
+          source: "BMKG",
+          published_at: new Date().toISOString()
+        }
+      ];
     }
+
+    res.json(articles);
   } catch (error) {
-    console.error("Error API Berita:", error.message);
-    res.status(500).json({ message: "Gagal memuat berita" });
+    console.error("Error API Berita:", error.response?.data || error.message);
+    res.status(500).json([]);
   }
 });
 
+
+// ====== SERVER HTTP ======
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
+
+// ====== WEBSOCKET CHATBOT ======
+wss.on("connection", (ws) => {
+  console.log("🤖 Client chatbot terhubung");
+
+  ws.on("message", (message) => {
+    const msg = message.toString().toLowerCase().trim();
+    let reply = "";
+
+    // ===== GREETING =====
+    if (/halo|hai|hi|selamat/.test(msg)) {
+      reply = "Halo 👋 Saya SkyBot. Kamu mau cek cuaca, berita, bantuan, atau profile?";
+    }
+
+    // ===== CUACA =====
+    else if (/cuaca|hujan|panas|dingin|berawan/.test(msg)) {
+      reply = "Untuk cek cuaca 🌤️, ketik **nama kota** di kolom utama ya.";
+    }
+
+    // ===== BERITA =====
+    else if (/berita|info|kabar|artikel/.test(msg)) {
+      reply = "Berita cuaca bisa kamu lihat di menu **📢 Berita** di bagian atas website.";
+    }
+
+    // ===== BANTUAN =====
+    else if (/bantuan|help|cara|panduan/.test(msg)) {
+      reply = "Menu **Bantuan** berisi panduan penggunaan SkyWeather ℹ️";
+    }
+
+    // ===== PROFILE (INI YANG KAMU MINTA) =====
+    else if (/profile|profil|akun|data saya|akun saya|edit/.test(msg)) {
+      reply = "Menu **👤 Profile** berisi data akun kamu dan pengaturan pengguna. Silakan klik menu **Profile** di navbar atas.";
+    }
+
+    // ===== USER BINGUNG =====
+    else if (/ga paham|kok|kenapa|bingung/.test(msg)) {
+      reply = "Tenang 😊 Kamu bisa tanya tentang **cuaca**, **berita**, **bantuan**, atau **profile**.";
+    }
+
+    // ===== FALLBACK =====
+    else {
+      reply = `Maaf, aku belum memahami pertanyaan kamu 😅  
+Coba ketik:
+• cuaca  
+• berita  
+• bantuan  
+• profile`;
+    }
+
+    ws.send(reply);
+  });
+
+  ws.on("close", () => {
+    console.log("❌ Client chatbot terputus");
+  });
+});
+
+
 // ====== JALANKAN SERVER ======
-app.listen(PORT, () => {
-  console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`🚀 Server + WebSocket aktif di http://localhost:${PORT}`);
 });

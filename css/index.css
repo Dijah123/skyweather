@@ -1,0 +1,239 @@
+/* --- Reset & Global Styles --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #FFFFFF; /* Latar belakang putih bersih seperti referensi */
+    color: #333;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Container Utility */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- NAVBAR STYLES --- */
+.navbar {
+    background: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #29B6F6; /* Warna biru langit */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-item {
+    font-weight: 500;
+    color: #666;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.nav-item:hover {
+    color: #29B6F6;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* --- Button Styles --- */
+.btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-text {
+    color: #666;
+    background: transparent;
+}
+.btn-text:hover { color: #29B6F6; }
+
+.btn-primary {
+    background: #29B6F6;
+    color: white;
+    border: 2px solid transparent;
+}
+.btn-primary:hover {
+    background: #1ea0dd;
+    box-shadow: 0 4px 15px rgba(41, 182, 246, 0.3);
+}
+
+.btn-cta-large {
+    background: linear-gradient(90deg, #4FC3F7 0%, #29B6F6 100%);
+    color: white;
+    padding: 16px 32px;
+    font-size: 16px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 8px 20px rgba(41, 182, 246, 0.4);
+}
+.btn-cta-large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(41, 182, 246, 0.5);
+}
+
+/* --- HERO SECTION STYLES --- */
+.hero-section {
+    margin-top: 80px; /* Kompensasi tinggi navbar fixed */
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    padding: 50px 0;
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+/* Kolom Kiri (Teks) */
+.hero-text-block {
+    flex: 1;
+    max-width: 500px;
+}
+
+.hero-text-block h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.hero-text-block p {
+    font-size: 1.1rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 40px;
+}
+
+/* Kolom Kanan (Gambar Card) */
+.hero-image-block {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.weather-card-illustration {
+    width: 100%;
+    max-width: 550px;
+    height: 450px;
+    /* Warna background card biru kehijauan lembut, mirip referensi tapi lebih 'langit' */
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+    border-radius: 30px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- Ilustrasi Cuaca di dalam Card (CSS Murni) --- */
+.weather-icon-wrapper {
+    position: relative;
+    width: 200px; height: 200px;
+}
+
+/* Matahari */
+.sun {
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: #FFD54F;
+    border-radius: 50%;
+    box-shadow: 0 0 40px rgba(255, 213, 79, 0.6);
+    z-index: 1;
+}
+
+/* Awan Besar */
+.cloud-big {
+    position: absolute;
+    top: 50px; left: 20px;
+    width: 180px; height: 70px;
+    background: #ffffff;
+    border-radius: 50px;
+    z-index: 2;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+.cloud-big::after { content: ''; position: absolute; width: 80px; height: 80px; background: #fff; border-radius: 50%; top: -35px; left: 25px; }
+.cloud-big::before { content: ''; position: absolute; width: 60px; height: 60px; background: #fff; border-radius: 50%; top: -25px; left: 85px; }
+
+/* Tetesan Hujan */
+.rain-drop {
+    position: absolute;
+    background: #29B6F6;
+    width: 8px; height: 20px;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+    bottom: 20px;
+    opacity: 0.7;
+    animation: rainFall 2s infinite linear;
+}
+.r1 { left: 60px; animation-delay: 0.5s; }
+.r2 { left: 100px; animation-delay: 1s; }
+.r3 { left: 140px; animation-delay: 0.2s; }
+
+@keyframes rainFall {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(100px); opacity: 0; }
+}
+
+/* Responsive untuk layar kecil (HP) */
+@media (max-width: 768px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        margin-top: 40px;
+    }
+    .hero-text-block h1 { font-size: 2.5rem; }
+    .hero-image-block { justify-content: center; width: 100%; }
+    .weather-card-illustration { height: 350px; }
+    .nav-links { display: none; /* Menyembunyikan link di HP agar simpel */ }
+    .logo span { display: none; }
+}

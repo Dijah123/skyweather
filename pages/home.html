@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Cek Cuaca</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <!-- Awan -->
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+
+  <!-- Header -->
+  <header>
+    <h1>🌤️ SkyWeather</h1>
+    <nav>
+      <a href="/home.html" class="active">Beranda</a>
+      <a href="/berita.html">Berita</a>
+      <a href="/bantuan.html">Bantuan</a>
+      <a href="/tentang.html">Profile</a>
+    </nav>
+  </header>
+
+  <!-- Main -->
+  <main>
+    <section class="weather-card">
+      <h2>Cek Cuaca Kota Kamu</h2>
+
+      <form id="formCuaca">
+        <input
+          type="text"
+          id="inputKota"
+          placeholder="Masukkan nama kota..."
+          autocomplete="off"
+        >
+        <button type="submit">Cari</button>
+      </form>
+
+      <div id="hasilCuaca">
+        <div style="opacity:0.6; margin-top:30px;">
+          <img src="https://cdn-icons-png.flaticon.com/512/1163/1163661.png" width="80">
+          <p style="margin-top:10px;">Ayo cek cuaca hari ini!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 | Pendidikan Teknik Informatika</p>
+  </footer>
+
+  <!-- ===== CHATBOT SKYBOT ===== -->
+<div id="chatbot-btn">💬</div>
+
+<div id="chatbot-box">
+  <div id="chatbot-header">🤖 SkyBot</div>
+
+  <div id="chatbot-messages">
+    <div class="bot-msg">
+      Halo! Saya SkyBot 🌤️<br>
+      Tanya cuaca, berita, atau bantuan.
+    </div>
+  </div>
+
+  <input
+    type="text"
+    id="chatbot-input"
+    placeholder="Ketik pesan..."
+    autocomplete="off"
+  />
+</div>
+
+  <!-- SCRIPT CUACA -->
+  <script>
+    const formCuaca = document.getElementById('formCuaca');
+    const inputKota = document.getElementById('inputKota');
+    const hasilCuaca = document.getElementById('hasilCuaca');
+
+    formCuaca.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const kota = inputKota.value.trim();
+
+      if (!kota) {
+        alert('Mohon masukkan nama kota!');
+        return;
+      }
+
+      hasilCuaca.innerHTML = '<p style="margin-top:20px;">🔍 Sedang mencari ke langit...</p>';
+
+      try {
+        const response = await fetch(`/cuaca/${encodeURIComponent(kota)}`);
+        if (!response.ok) throw new Error();
+
+        const data = await response.json();
+
+        hasilCuaca.innerHTML = `
+          <div class="weather-result">
+            <h3>${data.name}, ${data.sys.country}</h3>
+
+            <div class="weather-main">
+              <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png">
+              <p class="temp">${Math.round(data.main.temp)}°</p>
+              <p class="desc">${data.weather[0].description}</p>
+            </div>
+
+            <div class="weather-details">
+              <div class="detail-box">🌡️ Terasa <span>${Math.round(data.main.feels_like)}°C</span></div>
+              <div class="detail-box">💧 Lembab <span>${data.main.humidity}%</span></div>
+              <div class="detail-box">🌬️ Angin <span>${data.wind.speed} m/s</span></div>
+              <div class="detail-box">🔽 Tekanan <span>${data.main.pressure} hPa</span></div>
+            </div>
+          </div>
+        `;
+      } catch {
+        hasilCuaca.innerHTML = `
+          <div style="margin-top:20px;color:#e74c3c;">
+            ❌ <b>Oops!</b><br>Kota tidak ditemukan atau server offline.
+          </div>
+        `;
+      }
+    });
+  </script>
+
+<script>
+  // ====== WEBSOCKET CLIENT ======
+  const ws = new WebSocket("ws://localhost:3000");
+
+  const chatbotBtn = document.getElementById("chatbot-btn");
+  const chatbotBox = document.getElementById("chatbot-box");
+  const chatbotInput = document.getElementById("chatbot-input");
+  const chatbotMessages = document.getElementById("chatbot-messages");
+
+  chatbotBtn.onclick = () => {
+    chatbotBox.style.display =
+      chatbotBox.style.display === "flex" ? "none" : "flex";
+  };
+
+  ws.onmessage = (event) => {
+    chatbotMessages.innerHTML += `
+      <div class="bot-msg">${event.data}</div>
+    `;
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  };
+
+  chatbotInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && chatbotInput.value.trim() !== "") {
+      const msg = chatbotInput.value;
+
+      chatbotMessages.innerHTML += `
+        <div class="user-msg">${msg}</div>
+      `;
+
+      ws.send(msg);
+      chatbotInput.value = "";
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+  });
+</script>
+
+</body>
+</html>
